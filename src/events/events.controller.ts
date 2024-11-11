@@ -4,6 +4,8 @@ import {
   Delete,
   Get,
   HttpCode,
+  Logger,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -20,6 +22,8 @@ import { Event } from './event.entity';
   path: '/events',
 })
 export class EventsController {
+  private readonly logger = new Logger(EventsController.name);
+
   constructor(
     @InjectRepository(Event)
     private readonly repository: Repository<Event>,
@@ -27,11 +31,20 @@ export class EventsController {
 
   @Get()
   async findAll() {
-    return await this.repository.find();
+    this.logger.log('Hit the findAll route');
+    const events = await this.repository.find();
+    this.logger.debug(`Found ${events.length} events`);
+    return events;
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
+    const event = await this.repository.findOneBy({ id });
+
+    if (!event) {
+      throw new NotFoundException();
+    }
+
     return await this.repository.findOneBy({ id });
   }
 
@@ -52,6 +65,10 @@ export class EventsController {
   ) {
     const event = await this.repository.findOneBy({ id });
 
+    if (!event) {
+      throw new NotFoundException();
+    }
+
     return await this.repository.save({
       ...event,
       ...input,
@@ -63,6 +80,10 @@ export class EventsController {
   @HttpCode(204)
   async remove(@Param('id') id: string) {
     const event = await this.repository.findOneBy({ id: +id });
+
+    if (!event) {
+      throw new NotFoundException();
+    }
 
     await this.repository.remove(event);
   }
