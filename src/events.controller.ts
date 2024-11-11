@@ -8,6 +8,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateEventDto } from './create-event.dto';
 import { UpdateEventDto } from './update-event.dto';
@@ -17,57 +19,47 @@ import { Event } from './event.entity';
   path: '/events',
 })
 export class EventsController {
-  private events: Event[] = [];
+  constructor(
+    @InjectRepository(Event)
+    private readonly repository: Repository<Event>,
+  ) {}
 
   @Get()
-  findAll() {
-    return this.events;
+  async findAll() {
+    return await this.repository.find();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.events.find((event) => event.id === +id);
+  async findOne(@Param('id') id: string) {
+    return await this.repository.findOneBy({ id: +id });
   }
 
   @Post()
-  create(@Body() input: CreateEventDto) {
+  async create(@Body() input: CreateEventDto) {
     const event = {
       ...input,
-      id: this.events.length + 1,
       when: new Date(input.when),
     };
 
-    this.events.push(event);
-
-    return event;
+    return await this.repository.save(event);
   }
 
   @Patch(':id')
-  update(@Param('id') id, @Body() input: UpdateEventDto) {
-    const eventIndex = this.events.findIndex((event) => event.id === +id);
+  async update(@Param('id') id, @Body() input: UpdateEventDto) {
+    const event = await this.repository.findOneBy({ id: +id });
 
-    if (eventIndex === -1) {
-      throw new Error('Event not found');
-    }
-
-    this.events[eventIndex] = {
-      ...this.events[eventIndex],
+    return await this.repository.save({
+      ...event,
       ...input,
-      when: input?.when ? new Date(input.when) : this.events[eventIndex].when,
-    };
-
-    return this.events[eventIndex];
+      when: input?.when ? new Date(input.when) : event.when,
+    });
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string) {
-    const eventIndex = this.events.findIndex((event) => event.id === +id);
+  async remove(@Param('id') id: string) {
+    const event = await this.repository.findOneBy({ id: +id });
 
-    if (eventIndex === -1) {
-      throw new Error('Event not found');
-    }
-
-    this.events.splice(eventIndex, 1);
+    await this.repository.remove(event);
   }
 }

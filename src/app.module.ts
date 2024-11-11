@@ -18,6 +18,7 @@ import { Event } from './event.entity';
       entities: [Event],
       synchronize: process.env.NODE_ENV !== 'production',
     }),
+    TypeOrmModule.forFeature([Event]),
   ],
   controllers: [AppController, EventsController],
   providers: [AppService],
