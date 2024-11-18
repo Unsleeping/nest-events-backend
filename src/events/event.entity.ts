@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CreateEventDto } from './create-event.dto';
+import { Attendee } from 'src/events/attendee.entity';
 
 interface EventBase extends Omit<CreateEventDto, 'when'> {
   when: Date;
@@ -22,4 +23,15 @@ export class Event implements EventBase {
 
   @Column()
   address: string;
+
+  @OneToMany(() => Attendee, (attendee) => attendee.event, {
+    cascade: true,
+  })
+  attendees: Attendee[];
+
+  attendeeCount?: number;
+
+  attendeeAcceptedCount?: number;
+  attendeeMaybeCount?: number;
+  attendeeRejectedCount?: number;
 }
