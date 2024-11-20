@@ -10,15 +10,19 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateEventDto } from './create-event.dto';
-import { UpdateEventDto } from './update-event.dto';
+import { CreateEventDto } from './input/create-event.dto';
+import { UpdateEventDto } from './input/update-event.dto';
 import { Event } from './event.entity';
 import { Attendee } from 'src/events/attendee.entity';
 import { EventsService } from './events.service';
+import { ListEvents } from './input/list.events';
 
 @Controller({
   path: '/events',
@@ -35,10 +39,17 @@ export class EventsController {
   ) {}
 
   @Get()
-  async findAll() {
-    this.logger.log('Hit the findAll route');
-    const events = await this.repository.find();
-    this.logger.debug(`Found ${events.length} events`);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async findAll(@Query() filter: ListEvents) {
+    const events =
+      await this.eventsService.getEventsWithAttendeeCountFilteredPaginated(
+        filter,
+        {
+          total: true,
+          currentPage: filter.page,
+          limit: 10,
+        },
+      );
     return events;
   }
 
@@ -83,13 +94,11 @@ export class EventsController {
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string) {
-    const event = await this.repository.findOneBy({ id: +id });
+  async remove(@Param('id') id) {
+    const { affected } = await this.eventsService.deleteEvent(id);
 
-    if (!event) {
+    if (affected !== 1) {
       throw new NotFoundException();
     }
-
-    await this.repository.remove(event);
   }
 }
