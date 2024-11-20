@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { CreateEventDto } from './create-event.dto';
+import { CreateEventDto } from './input/create-event.dto';
 import { Attendee } from 'src/events/attendee.entity';
 
 interface EventBase extends Omit<CreateEventDto, 'when'> {
@@ -29,8 +29,8 @@ export class Event implements EventBase {
   })
   attendees: Attendee[];
 
+  // virtual properties
   attendeeCount?: number;
-
   attendeeAcceptedCount?: number;
   attendeeMaybeCount?: number;
   attendeeRejectedCount?: number;
