@@ -47,6 +47,5 @@ export class User {
   organized: Event[];
 
   @OneToMany(() => Attendee, (attendee) => attendee.user)
-  @Expose()
   attended: Attendee[];
 }

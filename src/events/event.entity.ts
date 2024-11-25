@@ -65,6 +65,10 @@ export class Event implements EventBase {
 
   @Expose()
   attendeeRejectedCount?: number;
+
+  constructor(partial: Partial<Event>) {
+    Object.assign(this, partial);
+  }
 }
 
 export type PaginatedEvents = PaginationResult<Event>;
