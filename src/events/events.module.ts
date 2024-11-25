@@ -7,8 +7,8 @@ import { Attendee } from 'src/events/attendee.entity';
 import { EventsService } from './events.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, Attendee])],
+  imports: [TypeOrmModule.forFeature([Event, Attendee])], // to inject the event and attendee repositories
+  providers: [EventsService], // any class with @Injectable() should be registered in providers
   controllers: [EventsController],
-  providers: [EventsService],
 })
 export class EventsModule {}
