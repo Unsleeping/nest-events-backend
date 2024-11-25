@@ -21,7 +21,6 @@ export async function paginate<T>(
     currentPage: 1,
   },
 ): Promise<PaginationResult<T>> {
-  console.log('🚀 ~ options:', options);
   const offset = (options.currentPage - 1) * options.limit;
   const data = await qb.offset(offset).limit(options.limit).getMany();
 
