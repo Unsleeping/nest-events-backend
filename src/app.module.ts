@@ -14,17 +14,18 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [ormConfig],
+      load: [ormConfig], // TODO: change to prod config for production
       expandVariables: true,
     }),
     TypeOrmModule.forRootAsync({
+      // register async to use runtime env variables, not the static object evaluated at the moment it's defined
       useFactory:
         process.env.NODE_ENV === 'production' ? ormConfigProd : ormConfig,
     }),
     AuthModule,
     EventsModule,
   ],
+  providers: [AppService], // any class with @Injectable() should be registered in providers
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

@@ -34,7 +34,7 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  @UsePipes(new ValidationPipe({ transform: true }))
+  @UsePipes(new ValidationPipe({ transform: true })) // { transfrom: true } to use default pagination fields
   async findAll(@Query() filter: ListEvents) {
     const events =
       await this.eventsService.getEventsWithAttendeeCountFilteredPaginated(
@@ -60,13 +60,13 @@ export class EventsController {
   }
 
   @Post()
-  @UseGuards(AuthGuardJwt) // for creating event user must be authenticated
+  @UseGuards(AuthGuardJwt) // for creating event, user must be authenticated
   async create(@Body() input: CreateEventDto, @CurrentUser() user: User) {
     return await this.eventsService.createEvent(input, user);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuardJwt)
+  @UseGuards(AuthGuardJwt) // for updating event, user must be authenticated
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() input: UpdateEventDto,
@@ -89,7 +89,7 @@ export class EventsController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuardJwt)
+  @UseGuards(AuthGuardJwt) // for deleting event, user must be authenticated
   @HttpCode(204)
   async remove(@Param('id') id, @CurrentUser() user: User) {
     const event = await this.eventsService.getEvent(id);
