@@ -117,10 +117,9 @@ export class EventsService {
     filter: ListEvents,
     paginateOptions: PaginateOptions,
   ) {
-    return await paginate(
-      await this.getEventsWithAttendeeCountFiltered(filter),
-      paginateOptions,
-    );
+    const qbResult = await this.getEventsWithAttendeeCountFiltered(filter);
+    this.logger.debug(qbResult.getSql());
+    return await paginate(qbResult, paginateOptions);
   }
 
   public async getEvent(id: number): Promise<Event | undefined> {
