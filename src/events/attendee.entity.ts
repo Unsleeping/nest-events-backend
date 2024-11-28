@@ -8,7 +8,7 @@ import {
 import { Expose } from 'class-transformer';
 
 import { Event } from './event.entity';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 
 export enum AttendeeAnswerEnum {
   Accepted = 1,

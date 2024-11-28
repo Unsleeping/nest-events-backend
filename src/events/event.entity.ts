@@ -9,9 +9,9 @@ import {
 import { Expose } from 'class-transformer';
 
 import { CreateEventDto } from './input/create-event.dto';
-import { Attendee } from 'src/events/attendee.entity';
-import { User } from 'src/auth/user.entity';
-import { PaginationResult } from 'src/pagination/paginator';
+import { Attendee } from '../events/attendee.entity';
+import { User } from '../auth/user.entity';
+import { PaginationResult } from '../pagination/paginator';
 
 interface EventBase extends Omit<CreateEventDto, 'when'> {
   when: Date;

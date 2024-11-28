@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EventsController } from './events.controller';
 import { Event } from './event.entity';
-import { Attendee } from 'src/events/attendee.entity';
+import { Attendee } from '../events/attendee.entity';
 import { EventsService } from './events.service';
 import { AttendeesService } from './attendees.service';
 import { CurrentUserEventAttendanceController } from './currrent-user-event-attendance.controller';
