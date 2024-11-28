@@ -118,8 +118,8 @@ describe('Events (e2e)', () => {
         address: 'Street 123',
       })
       .expect(201)
-      .then(() => {
-        return request(app.getHttpServer())
+      .then(async () => {
+        return await request(app.getHttpServer())
           .get('/events/1')
           .expect(200)
           .then((response) => {
