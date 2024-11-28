@@ -13,7 +13,10 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `${process.env.NODE_ENV}.env`,
+      envFilePath:
+        process.env.NODE_ENV === 'development'
+          ? '.env.development.local'
+          : '.env.test.local',
       load: [ormConfig], // TODO: change to prod config for production
       expandVariables: true,
     }),
