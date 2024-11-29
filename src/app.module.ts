@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -24,6 +26,12 @@ import { AuthModule } from './auth/auth.module';
       // register async to use runtime env variables, not the static object evaluated at the moment it's defined
       useFactory:
         process.env.NODE_ENV === 'production' ? ormConfigProd : ormConfig,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      debug: true, // TODO: change to false in production,
+      playground: true, // TODO: change to false in production
     }),
     AuthModule,
     EventsModule,
