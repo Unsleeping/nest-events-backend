@@ -11,7 +11,7 @@ import { Expose } from 'class-transformer';
 import { CreateEventDto } from './input/create-event.dto';
 import { Attendee } from '../events/attendee.entity';
 import { User } from '../auth/user.entity';
-import { PaginationResult } from '../pagination/paginator';
+import { Paginated } from '../pagination/paginator';
 
 interface EventBase extends Omit<CreateEventDto, 'when'> {
   when: Date;
@@ -71,4 +71,4 @@ export class Event implements EventBase {
   }
 }
 
-export type PaginatedEvents = PaginationResult<Event>;
+export class PaginatedEvents extends Paginated<Event>(Event) {}

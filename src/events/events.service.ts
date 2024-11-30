@@ -123,7 +123,11 @@ export class EventsService {
   ): Promise<PaginatedEvents> {
     const query = this.getEventsWithAttendeeCountFilteredQuery(filter);
     this.logger.debug(query.getSql());
-    return await paginate(query, paginateOptions);
+    return await paginate<Event, PaginatedEvents>(
+      query,
+      PaginatedEvents,
+      paginateOptions,
+    );
   }
 
   public async findOne(id: number): Promise<Event | undefined> {
@@ -155,8 +159,9 @@ export class EventsService {
     userId: number,
     paginateOptions: PaginateOptions,
   ): Promise<PaginatedEvents> {
-    return await paginate<Event>(
+    return await paginate<Event, PaginatedEvents>(
       this.getEventsOrganizedByUserIdQuery(userId),
+      PaginatedEvents,
       paginateOptions,
     );
   }
@@ -173,8 +178,9 @@ export class EventsService {
     userId: number,
     paginateOptions: PaginateOptions,
   ): Promise<PaginatedEvents> {
-    return await paginate<Event>(
+    return await paginate<Event, PaginatedEvents>(
       this.getEventsAttendedByUserIdQuery(userId),
+      PaginatedEvents,
       paginateOptions,
     );
   }
