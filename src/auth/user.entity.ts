@@ -55,4 +55,8 @@ export class User {
 
   @OneToMany(() => Attendee, (attendee) => attendee.user)
   attended: Attendee[];
+
+  constructor(partial?: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }

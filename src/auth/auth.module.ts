@@ -10,6 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersController } from './users.controller';
 import { AuthResolver } from './auth.resolver';
 import { UserResolver } from './user.resolver';
+import { UserService } from './user.service';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserResolver } from './user.resolver';
     JwtStrategy,
     AuthResolver,
     UserResolver,
+    UserService,
   ], // any class with @Injectable() should be registered in providers
   controllers: [AuthController, UsersController],
 })
