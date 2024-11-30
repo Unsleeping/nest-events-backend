@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersController } from './users.controller';
 import { AuthResolver } from './auth.resolver';
+import { UserResolver } from './user.resolver';
 
 @Module({
   imports: [
@@ -21,7 +22,13 @@ import { AuthResolver } from './auth.resolver';
       }),
     }),
   ],
-  providers: [LocalStategy, AuthService, JwtStrategy, AuthResolver], // any class with @Injectable() should be registered in providers
+  providers: [
+    LocalStategy,
+    AuthService,
+    JwtStrategy,
+    AuthResolver,
+    UserResolver,
+  ], // any class with @Injectable() should be registered in providers
   controllers: [AuthController, UsersController],
 })
 export class AuthModule {}

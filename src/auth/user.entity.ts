@@ -7,19 +7,23 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { Profile } from './profile.entity';
 import { Event } from '../events/event.entity';
 import { Attendee } from '../events/attendee.entity';
 
 @Entity()
+@ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
   @Expose()
+  @Field(() => Int)
   id: number;
 
   @Column({ unique: true })
   @Expose()
+  @Field()
   username: string;
 
   @Column()
@@ -27,14 +31,17 @@ export class User {
 
   @Column({ unique: true })
   @Expose()
+  @Field()
   email: string;
 
   @Column()
   @Expose()
+  @Field()
   firstName: string;
 
   @Column()
   @Expose()
+  @Field()
   lastName: string;
 
   @OneToOne(() => Profile)
